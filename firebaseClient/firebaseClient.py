@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 
 events = []
 
-
+events2 = []
 ####
 connected = False
 
@@ -23,12 +23,14 @@ def handle_data(data):
     if code == 'I':
         event_dic["type"] = 'IN'
         event_dic["tstamp"] = datetime.now()
+        events2.append((datetime.now(), 'IN'))
         print("in")
         events.append(event_dic)
         #first_event = True
     elif code == 'O':
         event_dic["type"] = 'OUT'
         event_dic["tstamp"] = datetime.now()
+        events2.append((datetime.now(), 'OUT'))
         print("out")
         #first_event = True
         events.append(event_dic)
@@ -70,23 +72,44 @@ def select_all_events(conn):
  
     for row in rows:
         print(row)
+
+
+def select_last_events(conn):
+    """
+    Query all rows in the events table
+    :param conn: the Connection object
+    :return:
+    """
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM personEvent ORDER BY id DESC LIMIT 3")
+ 
+    rows = cur.fetchall()
+    
+    print("last 3 events: ")
+    for row in rows:
+        print(row)
  
 
 def periodicDBInsert():
     # for sql
+    insert_SQL = '''INSERT INTO personEvent(tstamp, type) VALUES(?, ?)'''
     global events
+    global events2
     db = sqlite3.connect('local.db')
-
+    c = db.cursor()
     while True:
         if not events:
             print("no hay eventos!")
         else:
             print("insertando eventos...")
-            for event in events:
-                pushToLocalDB(db, event)
+            # for event in events:
+            #     pushToLocalDB(db, event)
 
-            select_all_events(db)
+            c.executemany(insert_SQL, events2)
+            db.commit()
+            select_last_events(db)
             events = []
+            events2 = []
 
         time.sleep(10)
 
@@ -104,7 +127,7 @@ if __name__ == '__main__':
     else:
 
         port = "/dev/ttyACM0"
-        
+
     baud = 115200
 
     serial_port = serial.Serial(port, baud, timeout=0)

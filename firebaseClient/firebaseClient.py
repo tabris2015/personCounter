@@ -35,7 +35,8 @@ def handle_data(data):
         #first_event = True
         events.append(event_dic)
     else:
-        print("no code")
+        pass
+        #print("no code")
 
 
 
@@ -48,6 +49,7 @@ def read_from_port(ser):
             #print("test")
             if ser.in_waiting:
                 reading = ser.readline()
+                ser.flush()
                 if reading:
                     handle_data(reading)
 

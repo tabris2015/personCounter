@@ -46,11 +46,12 @@ def read_from_port(ser):
 
         while True:
             #print("test")
-            reading = ser.readline()
-            if reading:
-                handle_data(reading)
+            if ser.in_waiting:
+                reading = ser.readline()
+                if reading:
+                    handle_data(reading)
 
-            time.sleep(0.1)
+                time.sleep(0.05)
 
 
 

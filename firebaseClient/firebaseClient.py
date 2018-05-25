@@ -6,12 +6,7 @@ from firebase import firebase
 import sqlite3
 from datetime import datetime, timedelta
 
-
 #/////////////////////////////////////////////////
-port = "/dev/ttyACM0"
-baud = 115200
-
-serial_port = serial.Serial(port, baud, timeout=0)
 
 events = []
 
@@ -96,30 +91,47 @@ def periodicDBInsert():
         time.sleep(10)
 
 
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description='contador de personas')
+    parser.add_argument('-serial', action='store',help='for serial port')
+
+    args = parser.parse_args()
+
+    if args.serial != None:
+        print("puerto serial!")
+        port = args.serial
+    else:
+
+        port = "/dev/ttyACM0"
+        
+    baud = 115200
+
+    serial_port = serial.Serial(port, baud, timeout=0)
 
 
-first_event = False
-serialTh = threading.Thread(target=read_from_port, args=(serial_port,))
-serialTh.daemon = True
+    first_event = False
+    serialTh = threading.Thread(target=read_from_port, args=(serial_port,))
+    serialTh.daemon = True
 
-dbTh = threading.Thread(target=periodicDBInsert)
+    dbTh = threading.Thread(target=periodicDBInsert)
 
-#dbTh = threading.Timer(5, periodicDBInsert, args=(db,))
-dbTh.daemon = True
-# -----
-dbTh.start()
-serialTh.start()
-###
+    #dbTh = threading.Timer(5, periodicDBInsert, args=(db,))
+    dbTh.daemon = True
+    # -----
+    dbTh.start()
+    serialTh.start()
+    ###
 
-URL = ".."
+    URL = ".."
 
-SECRET = "...."
-EMAIL = "000000"
-EXTRA = "EEEEE"
-#authentication = firebase.FirebaseAuthentication(SECRET, EMAIL, extra=EXTRA)
+    SECRET = "...."
+    EMAIL = "000000"
+    EXTRA = "EEEEE"
+    #authentication = firebase.FirebaseAuthentication(SECRET, EMAIL, extra=EXTRA)
 
-#firebase = firebase.FirebaseApplication(URL, authentication=authentication)
+    #firebase = firebase.FirebaseApplication(URL, authentication=authentication)
 
 
-while True:
-    pass
+    while True:
+        pass

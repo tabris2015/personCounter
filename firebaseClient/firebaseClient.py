@@ -126,7 +126,7 @@ if __name__ == '__main__':
         port = args.serial
     else:
 
-        port = "/dev/ttyACM0"
+        port = "/dev/ttyUSB0"
 
     baud = 115200
 

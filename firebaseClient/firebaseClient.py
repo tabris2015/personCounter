@@ -50,7 +50,7 @@ def read_from_port(ser):
             if reading:
                 handle_data(reading)
 
-            time.sleep(0.05)
+            time.sleep(0.1)
 
 
 

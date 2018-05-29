@@ -1,15 +1,17 @@
-import pyrebase
-config = {
-  "apiKey": "AIzaSyCZD5p33MawUzTc-amsrQhnbRe0mZpMEvo",
-  "authDomain": "asobancontrolferia.firebaseapp.com",
-  "databaseURL": "https://asobancontrolferia.firebaseio.com",
-  "storageBucket": "asobancontrolferia.appspot.com",
-  "serviceAccount": "key2.json"
-}
-firebase = pyrebase.initialize_app(config)
 
-db = firebase.database()
-data = {"name": "pepe"}
-db.child("test").set(data)
-users = db.child("test").get()
-print users.val()
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
+
+# Use the application default credentials
+cred = credentials.Certificate('key2.json')
+firebase_admin.initialize_app(cred)
+
+db = firestore.client()
+
+eventos_ref = db.collection(u'eventos')
+
+docs = eventos_ref.get()
+
+for doc in docs:
+    print(u'{} => {}'.format(doc.id, doc.to_dict()))

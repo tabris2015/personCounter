@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "asobancontrolferia",
+  "private_key_id": "6900dae3474b59f9cb2fc26cd59e9e020a948c27",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC5R7ASB8M1Qmgt\nG1ARCPlajC588LsYgVP5TsOLIuRvqHflVtlBCh0JrDjsbW8DZgT7OnLtODCPUhHj\nUIXfZA7pZpUAUcCIchEBKvjJTPL5R/SmABMUgx7MB4apQkYEmlOI/g5+W8/qaOp6\nVaDKrxxWg9alTAmLeuFdYut+yP+TWb0Y6U9I4TUbItuoShubOn9V0sIsBK/X6buI\nyBF14x0A6b9uXiZ85M7rKGPvnU6i7rHstX2yllnccpI4afOYT1QhKIeedOu2py7N\nXhEFg66rKtCaxA5cmIQD7GqwTvrY19Oz7a0l+GNA1NlEeaXYhnomMVRmWAs+oOG6\nKohMks+NAgMBAAECggEAIYJMXvpt7Oo5dpz3tlkB5gUv3DNalyQ+uHptBbM2Dtaw\ndncmXCu01DzEX8gr+XigQoKP6gTNTYJpj0vPJneNddtya8gdUuAUYLpxm9CRqhGA\nNuyRBtbvATYEPgTpLmht3rsaCnLW791xONZXOgkBDkmSTrtph4MeErpy/m9iP7b+\nmDlH6WtHA1l5jHvIHaWUEL7rHaws+tUSmqG4Opsd32J5tb1e4H6av1IE0vUQ1Qud\n/SwuU9w/ZyEd3frxtM8LsMvES6C9WftQZ1T8zr2EYrfKQZlPUrrWgLFjuVlnLZwI\nUt7eZDktuL3VoOuNCeE1TY1gHfwIvOhaquHDaJRP6QKBgQDhTS/2SJ0/ckObuYLo\nEoQtU4/WplCevbv1i71ihxijYCjloOQt8vJy06XQlSrQmQaZcPcBbQFjYi4ktmJM\nHoLJj4dxrZHlZz281CEer/tYyQ8jjlbKyiWAb+6WBVUmd9ECzpeV7MaiJzz7VWIu\nVpci1n9BFnT1upp7ZhPSDDJxGQKBgQDShn+g5c2qtemPS/vv3M0c4tSrM0yhAxFC\ncG9OxnWVTQJKsrK5MvyY9+wPExw3gcBrMCQHtyDVYXozzkl4n5tcoI38QeQGJhn4\nmpSHxg70knc7Y7nZGL/z/+Y297kSXFMN5Ed6qmq3PJTUa3ZDT6uSfvnZOe3V0Wjy\nLv6532JclQKBgQDYteQSY1pNstzxJwmRrG3TI3NRpnwZlKr8zsMFyKicTVxJM+8H\ne45VgNsXvMOIDglZAl2002Loc4Gq8nuueBKZSiOf5rJVFG8/+FM7L0724b5cFwfI\n25Qi7IdzagGzlMBIkOsh3LRbOJ7hqglcRRHvAp84vh8WVb1OQKuD+RNz0QKBgQDE\nPX+G2e/G619VpfyocGf6Py8CjwUlKZjTF7+J7ND6ZRh3zO9wVyjC5ody3dt1mktl\nHzDWyEug3AZveCFggVbvFvKDbGBDowyegmllzqduL4FZKPK6famgpq9QGca4aLs6\nvcore+OR/rS09Z79y6whGJ+Jb8hVgaiT6F6loKctqQKBgAeXk/F5hP+1FYYh6D6s\n+v+hLBc8bSY0wMYuE0+hAjhBml388STn/pIMxQkzF4SddOuJBCLb+pr23ZZJr5vk\n1b4YDTQPo1xFT5MNSdAvh09UmWWKu7CJqs3ubxfDSE/+qK8qwcJNiVif3v1IHILK\nLY9K/Q83YpQhsM1leX4E+NcZ\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-gd9uc@asobancontrolferia.iam.gserviceaccount.com",
+  "client_id": "111279960981583639193",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-gd9uc%40asobancontrolferia.iam.gserviceaccount.com"
+}

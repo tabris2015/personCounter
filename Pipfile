@@ -8,6 +8,11 @@ name = "pypi"
 [packages]
 pyserial = "*"
 python-firebase = "*"
+pylint = "*"
+pyrebase = "*"
+ipython = "*"
+firebase-admin = "*"
+requests = "*"
 
 [requires]
 python_version = "2.7"

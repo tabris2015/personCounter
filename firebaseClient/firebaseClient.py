@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import threading
 import serial
 import time
@@ -189,9 +190,13 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='contador de personas')
     parser.add_argument('-serial1', required=True, action='store',help='for serial port1')
     parser.add_argument('-serial2', required=True, action='store',help='for serial port2')
-
+    parser.add_argument('-key', required=True, action='store',help='path to key for remote connection')
+    
     args = parser.parse_args()
-
+    keyPath = ""
+    if args.key != None:
+        keyPath = args.key
+        
     if args.serial1 != None and args.serial2 != None:
         print("puerto serial!")
         port1 = args.serial1
@@ -215,7 +220,7 @@ if __name__ == '__main__':
 
     #first_event = False
 
-    dbTh = threading.Thread(target=periodicDBInsert)
+    dbTh = threading.Thread(target=periodicDBInsert, args=(keyPath,))
 
     #dbTh = threading.Timer(5, periodicDBInsert, args=(db,))
     dbTh.daemon = True

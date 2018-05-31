@@ -1,0 +1,10 @@
+
+{
+  "type": "service_account",
+  "apiKey": "AIzaSyCZD5p33MawUzTc-amsrQhnbRe0mZpMEvo",
+    "authDomain": "asobancontrolferia.firebaseapp.com",
+    "databaseURL": "https://asobancontrolferia.firebaseio.com",
+    "projectId": "asobancontrolferia",
+    "storageBucket": "asobancontrolferia.appspot.com",
+    "messagingSenderId": "271205250969"
+}

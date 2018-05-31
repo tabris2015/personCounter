@@ -58,7 +58,7 @@ def read_from_port(ser):
 
 
 
-def pushToLocalDB(db, event):
+def pushToLocalDB(db, event, firebase=False):
     insert_SQL = '''INSERT INTO personEvent(tstamp, type) VALUES(?, ?)'''
     c = db.cursor()
     c.execute(insert_SQL,(event['tstamp'], event['type']))
@@ -96,10 +96,11 @@ def select_last_events(conn):
  
 
 def periodicDBInsert():
-    # for sql
+    # for sqlite
     insert_SQL = '''INSERT INTO personEvent(tstamp, type) VALUES(?, ?)'''
     global events
     global events2
+
     db = sqlite3.connect('local.db')
     c = db.cursor()
     while True:
@@ -129,18 +130,16 @@ if __name__ == '__main__':
     if args.serial != None:
         print("puerto serial!")
         port = args.serial
+        baud = 115200
+        serial_port = serial.Serial(port, baud, timeout=0)
+        serialTh = threading.Thread(target=read_from_port, args=(serial_port,))
+        serialTh.daemon = True
+        serialTh.start()
     else:
-
         port = "/dev/ttyUSB0"
 
-    baud = 115200
 
-    serial_port = serial.Serial(port, baud, timeout=0)
-
-
-    first_event = False
-    serialTh = threading.Thread(target=read_from_port, args=(serial_port,))
-    serialTh.daemon = True
+    #first_event = False
 
     dbTh = threading.Thread(target=periodicDBInsert)
 
@@ -148,7 +147,6 @@ if __name__ == '__main__':
     dbTh.daemon = True
     # -----
     dbTh.start()
-    serialTh.start()
     ###
 
     URL = ".."
@@ -159,7 +157,6 @@ if __name__ == '__main__':
     #authentication = firebase.FirebaseAuthentication(SECRET, EMAIL, extra=EXTRA)
 
     #firebase = firebase.FirebaseApplication(URL, authentication=authentication)
-
 
     while True:
         pass

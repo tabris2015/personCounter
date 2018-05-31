@@ -147,9 +147,9 @@ def select_last_events(conn):
         print(row)
  
 
-def periodicDBInsert():
+def periodicDBInsert(key):
     #///////////////////
-    cred = credentials.Certificate('key2.json')
+    cred = credentials.Certificate(key)
     firebase_admin.initialize_app(cred)
     dbFs = firestore.client()
     # for sqlite
@@ -196,7 +196,7 @@ if __name__ == '__main__':
     keyPath = ""
     if args.key != None:
         keyPath = args.key
-        
+
     if args.serial1 != None and args.serial2 != None:
         print("puerto serial!")
         port1 = args.serial1

@@ -2,7 +2,7 @@
 
 #include <NewPing.h>
 #include "FSME.h"
-#define MAX_DISTANCE 100 // Maximum distance (in cm) to ping.
+#define MAX_DISTANCE 120 // Maximum distance (in cm) to ping.
 #define DELAY 20
 //#define DEBUG
 #define INFRARED
@@ -11,7 +11,7 @@
 #ifdef INFRARED
   #define LEFT_PIN A0
   #define RIGHT_PIN A1
-  #define IR_THRESHOLD 300
+  #define IR_THRESHOLD 350
 #endif
 
 #ifdef ULTRASOUND
@@ -41,16 +41,22 @@ enum STATE
   idle,
   left_first,
   right_first,
+  left_full,
+  right_full,
   person_in,
   person_out
 };
 
 FSME fsm;
-State states[5];
+State states[7];
 // transiciones
 Transition * idle_trans[2];
 Transition * left_first_trans[2];
 Transition * right_first_trans[2];
+
+Transition * left_full_trans[1];
+Transition * right_full_trans[1];
+
 Transition * person_in_trans[1];
 Transition * person_out_trans[1];
 
@@ -64,6 +70,10 @@ uint32_t actualTime(void) {
 void idle_action();
 void left_first_action();
 void right_first_action();
+
+void left_full_action();
+void right_full_action();
+
 void person_in_action();
 void person_out_action();
 // prototypes for events
@@ -81,12 +91,16 @@ void setup() {
   idle_trans[1] = new EvnTransition(rightObstacle, right_first);
 
   //left_first_trans[0] = new EvnTransition(noObstacle, idle);
-  left_first_trans[0] = new EvnTransition(rightObstacle, person_in);
+  left_first_trans[0] = new EvnTransition(bothObstacle, left_full);
   left_first_trans[1] = new TimeTransition(2000, idle);
 
   //right_first_trans[0] = new EvnTransition(noObstacle, idle);
-  right_first_trans[0] = new EvnTransition(leftObstacle, person_out);
+  right_first_trans[0] = new EvnTransition(bothObstacle, right_full);
   right_first_trans[1] = new TimeTransition(2000, idle);
+
+  left_full_trans[0] = new EvnTransition(noObstacle, person_in);
+  right_full_trans[0] = new EvnTransition(noObstacle, person_out);
+  
 
   person_in_trans[0] = new TimeTransition(5, idle);
   person_out_trans[0] = new TimeTransition(5, idle);
@@ -95,10 +109,14 @@ void setup() {
   states[idle].setState(idle_action, idle_trans, 2);
   states[left_first].setState(left_first_action, left_first_trans, 2);
   states[right_first].setState(right_first_action, right_first_trans, 2);
+
+  states[left_full].setState(left_full_action, left_full_trans, 1);
+  states[right_full].setState(right_full_action, right_full_trans, 1);
+  
   states[person_in].setState(person_in_action, person_in_trans, 1);
   states[person_out].setState(person_out_action, person_out_trans, 1);
 
-  fsm.setStates(states, 5);
+  fsm.setStates(states, 7);
   fsm.setInitialState(idle);
 
 }
@@ -188,6 +206,30 @@ void right_first_action()
     #endif
   }
 }
+
+void left_full_action()
+{
+  if(fsm.isStateChanged())
+  {
+    // entry action
+    #ifdef DEBUG
+    printSensors();
+    Serial.println("entering left_full.");
+    #endif
+  }
+}
+void right_full_action()
+{
+  if(fsm.isStateChanged())
+  {
+    // entry action
+    #ifdef DEBUG
+    printSensors();
+    Serial.println("entering right_full.");
+    #endif
+  }
+}
+
 void person_in_action()
 {
   if(fsm.isStateChanged())
@@ -199,7 +241,7 @@ void person_in_action()
     Serial.print("entering person_in. Count: ");
     Serial.println(counter);
     #endif
-    Serial.println("I");
+    Serial.print("I");
   }
 }
 void person_out_action()
@@ -213,6 +255,6 @@ void person_out_action()
     Serial.print("entering person_out. Count: ");
     Serial.println(counter);
     #endif
-    Serial.println("O");
+    Serial.print("O");
   }
 }

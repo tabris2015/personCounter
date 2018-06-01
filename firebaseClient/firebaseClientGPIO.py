@@ -85,7 +85,7 @@ def out2Event():
 
 def periodicDBInsert(key):
     insert_SQL = '''INSERT INTO personEvent(tstamp, type) VALUES(?, ?)'''
-    db = sqlite3.connect('local.db')
+    db = sqlite3.connect('/home/pi/projects/personCounter/firebaseClient/local.db')
     c = db.cursor()
     global FALLA
     #///////////////////

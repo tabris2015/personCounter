@@ -18,7 +18,7 @@ from firebase_admin import firestore
 
 missed_events = []
 
-DB_INTERVAL = 30
+DB_INTERVAL = 180
 ##### pin definitions
 
 FAULT = LED(5)

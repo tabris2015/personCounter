@@ -149,4 +149,8 @@ if __name__ == '__main__':
     out2_button.when_pressed = out2Event
     
     while True:
+        FAULT.on()
         time.sleep(0.1)
+        FAULT.off()
+        time.sleep(0.8)
+        

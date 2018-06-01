@@ -97,6 +97,7 @@ def periodicDBInsert(key):
     except:
         FAULT.on()
         FALLA = True
+        return
     # for sqlite
   
     while True:
@@ -127,6 +128,7 @@ def periodicDBInsert(key):
                 missed_events = events
                 FAULT.on()
                 FALLA = True
+                
             #c.executemany(insert_SQL, events2)
             #db.commit()
             #select_last_events(db)
@@ -167,7 +169,12 @@ if __name__ == '__main__':
             FAULT.on()
             time.sleep(0.1)
             FAULT.off()
-            time.sleep(0.8)
+            time.sleep(0.9)
         else:
             FAULT.on()
-            time.sleep(1)    
+            time.sleep(1)   
+
+    FAULT.on()
+
+FAULT.on()
+ 

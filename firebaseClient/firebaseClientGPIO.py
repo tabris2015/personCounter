@@ -72,7 +72,7 @@ def in2Event():
     eventQueue.put(event_dic)
 
 def out2Event():
-    print("out1!")
+    print("out2!")
     event_dic = {}
     event_dic["tipo_marcado"] = 0
     event_dic["fecha"] = datetime.utcnow()

@@ -154,12 +154,12 @@ def periodicDBInsert(key):
     dbFs = firestore.client()
     # for sqlite
     
-    insert_SQL = '''INSERT INTO personEvent(tstamp, type) VALUES(?, ?)'''
+    #insert_SQL = '''INSERT INTO personEvent(tstamp, type) VALUES(?, ?)'''
     global events
     global events2
 
     #db = sqlite3.connect('local.db')
-    c = db.cursor()
+    #c = db.cursor()
     while True:
         if not events:
             print("no hay eventos!")

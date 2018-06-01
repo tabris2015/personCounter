@@ -158,7 +158,7 @@ def periodicDBInsert(key):
     global events
     global events2
 
-    db = sqlite3.connect('local.db')
+    #db = sqlite3.connect('local.db')
     c = db.cursor()
     while True:
         if not events:
@@ -176,9 +176,9 @@ def periodicDBInsert(key):
             }   
             doc_ref.set(doc_data)
 
-            c.executemany(insert_SQL, events2)
-            db.commit()
-            select_last_events(db)
+            #c.executemany(insert_SQL, events2)
+            #db.commit()
+            #select_last_events(db)
             events = []
             events2 = []
 

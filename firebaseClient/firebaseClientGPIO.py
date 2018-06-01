@@ -139,4 +139,4 @@ if __name__ == '__main__':
     out2_button.when_pressed = out2Event
     
     while True:
-        pass
+        time.sleep(0.1)

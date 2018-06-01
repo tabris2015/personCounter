@@ -131,11 +131,9 @@ def periodicDBInsert(key):
                                 'id_evento': 1,
 
                 }   
-                print('ingresando datos a db remota...')
-                doc_ref.set(doc_data)
                 ######
                 events_sqlite = []
-                for event in events:
+                for event in total_events:
                     events_sqlite.append(
                         (
                             event['fecha'], 
@@ -148,6 +146,9 @@ def periodicDBInsert(key):
                 print('ingresando datos a db local...')
                 db.commit()
                 ######
+                print('ingresando datos a db remota...')
+                doc_ref.set(doc_data)
+                ##################
                 events = []
                 missed_events = []
                 FAULT.off()

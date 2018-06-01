@@ -84,6 +84,9 @@ def out2Event():
 
 
 def periodicDBInsert(key):
+    insert_SQL = '''INSERT INTO personEvent(tstamp, type) VALUES(?, ?)'''
+    db = sqlite3.connect('local.db')
+    c = db.cursor()
     global FALLA
     #///////////////////
     global missed_events
@@ -121,6 +124,19 @@ def periodicDBInsert(key):
 
                 }   
                 doc_ref.set(doc_data)
+                ######
+                events_sqlite = []
+                for event in events:
+                    events_sqlite.append(
+                        (
+                            event['fecha'], 
+                            event['tipo_marcado'], 
+                            event['id_sensor']
+                        )
+                    )
+                c.executemany(insert_SQL, events)
+                db.commit()
+                ######
                 missed_events = []
                 FAULT.off()
                 FALLA = False
@@ -177,4 +193,3 @@ if __name__ == '__main__':
     FAULT.on()
 
 FAULT.on()
- 

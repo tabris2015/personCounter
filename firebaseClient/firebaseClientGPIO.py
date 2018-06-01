@@ -93,6 +93,7 @@ def periodicDBInsert(key):
         firebase_admin.initialize_app(cred)
         dbFs = firestore.client()
         FAULT.off()
+        FALLA = False
     except:
         FAULT.on()
         FALLA = True
@@ -107,7 +108,8 @@ def periodicDBInsert(key):
             # for event in events:
             #     pushToLocalDB(db, event)
             # creando doc
-            events = queue_get_all(eventQueue)
+            if not eventQueue.empty():
+                events = queue_get_all(eventQueue)
             
             try:
                 total_events = events + missed_events
@@ -120,6 +122,7 @@ def periodicDBInsert(key):
                 doc_ref.set(doc_data)
                 missed_events = []
                 FAULT.off()
+                FALLA = False
             except:
                 missed_events = events
                 FAULT.on()
@@ -160,7 +163,7 @@ if __name__ == '__main__':
     out2_button.when_pressed = out2Event
     
     while True:
-        if FALLA:
+        if not FALLA:
             FAULT.on()
             time.sleep(0.1)
             FAULT.off()

@@ -204,8 +204,10 @@ if __name__ == '__main__':
         baud = 115200
 
         serial_port1 = serial.Serial(port1, baud, timeout=0)
+        time.sleep(2)
         print("serial1 conectado!")
         serial_port2 = serial.Serial(port2, baud, timeout=0)
+        time.sleep(2)
         print("serial2 conectado!")
         
         serialTh1 = threading.Thread(target=read_from_port1, args=(serial_port1,))
@@ -213,7 +215,9 @@ if __name__ == '__main__':
         serialTh1.daemon = True
         serialTh2.daemon = True
         serialTh1.start()
+        time.sleep(1)
         serialTh2.start()
+        time.sleep(1)
     else:
         port = "/dev/ttyUSB0"
 

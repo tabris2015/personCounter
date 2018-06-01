@@ -86,7 +86,7 @@ def out2Event():
 
 
 def periodicDBInsert(key):
-    insert_SQL = '''INSERT INTO personEvent(tstamp, type) VALUES(?, ?)'''
+    insert_SQL = '''INSERT INTO personEvent(fecha, tipo_marcado, id_sensor) VALUES(?, ?, ?)'''
     db = sqlite3.connect('/home/pi/projects/personCounter/firebaseClient/local.db')
     c = db.cursor()
     global DB_INTERVAL

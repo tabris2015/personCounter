@@ -153,7 +153,8 @@ def periodicDBInsert(key):
                 FAULT.off()
                 FALLA = False
                 print('actualizacion de db finalizada!')
-            except:
+            except Exception:
+                print(Exception.message)
                 print('salvando datos...')
                 missed_events = events
                 FAULT.on()

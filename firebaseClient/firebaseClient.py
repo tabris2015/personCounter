@@ -87,7 +87,7 @@ def read_from_port1(ser):
                 if reading:
                     handle_data_s1(reading)
 
-                time.sleep(0.05)
+                time.sleep(0.1)
 
 
 def read_from_port2(ser):
@@ -104,7 +104,7 @@ def read_from_port2(ser):
                 if reading:
                     handle_data_s2(reading)
 
-                time.sleep(0.05)
+                time.sleep(0.1)
 
 
 

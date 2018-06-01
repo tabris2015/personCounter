@@ -16,6 +16,7 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 #/////////////////////////////////////////////////
 
+missed_events = []
 ##### pin definitions
 
 FAULT = LED(5)
@@ -82,6 +83,7 @@ def out2Event():
 
 def periodicDBInsert(key):
     #///////////////////
+    global missed_events
     try:
         print("conectando a la DB...")
         cred = credentials.Certificate(key)
@@ -102,16 +104,20 @@ def periodicDBInsert(key):
             #     pushToLocalDB(db, event)
             # creando doc
             events = queue_get_all(eventQueue)
+            
             try:
+                total_events = events + missed_events
                 doc_ref = dbFs.collection(u'marcados_eventos').document(unicode(datetime.now()))
                 doc_data = {
-                                'marcados':events,
+                                'marcados':total_events,
                                 'id_evento': 1,
 
                 }   
                 doc_ref.set(doc_data)
+                missed_events = []
                 FAULT.off()
             except:
+                missed_events = events
                 FAULT.on()
             #c.executemany(insert_SQL, events2)
             #db.commit()

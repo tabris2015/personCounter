@@ -124,12 +124,14 @@ def periodicDBInsert(key):
             try:
                 print("eventos perdidos en cola: ", len(missed_events))
                 total_events = events + missed_events
+                print("accediendo a coleccion...")
                 doc_ref = dbFs.collection(u'marcados_eventos').document(unicode(datetime.now()))
                 doc_data = {
                                 'marcados':total_events,
                                 'id_evento': 1,
 
                 }   
+                print('ingresando datos a db remota...')
                 doc_ref.set(doc_data)
                 ######
                 events_sqlite = []
@@ -141,14 +143,18 @@ def periodicDBInsert(key):
                             event['id_sensor']
                         )
                     )
+
                 c.executemany(insert_SQL, events_sqlite)
+                print('ingresando datos a db local...')
                 db.commit()
                 ######
                 events = []
                 missed_events = []
                 FAULT.off()
                 FALLA = False
+                print('actualizacion de db finalizada!')
             except:
+                print('salvando datos...')
                 missed_events = events
                 FAULT.on()
                 FALLA = True

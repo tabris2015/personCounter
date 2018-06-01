@@ -4,10 +4,10 @@ from time import sleep
 
 ##### pin definitions
 
-IN1 = 5
-OUT1 = 6
-IN2 = 13
-OUT2 = 19
+IN1 = 6
+OUT1 = 13
+IN2 = 19
+OUT2 = 26
 
 def in1():
     print("in1!")

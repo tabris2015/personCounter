@@ -21,6 +21,8 @@ missed_events = []
 
 FAULT = LED(5)
 
+FALLA = False
+
 IN1 = 13
 OUT1 = 6
 IN2 = 26
@@ -82,6 +84,7 @@ def out2Event():
 
 
 def periodicDBInsert(key):
+    global FALLA
     #///////////////////
     global missed_events
     try:
@@ -92,11 +95,12 @@ def periodicDBInsert(key):
         FAULT.off()
     except:
         FAULT.on()
+        FALLA = True
     # for sqlite
   
     while True:
         
-        if eventQueue.empty():
+        if eventQueue.empty() and not missed_events:
             print("no hay eventos!")
         else:
             print("insertando eventos...")
@@ -119,6 +123,7 @@ def periodicDBInsert(key):
             except:
                 missed_events = events
                 FAULT.on()
+                FALLA = True
             #c.executemany(insert_SQL, events2)
             #db.commit()
             #select_last_events(db)
@@ -155,8 +160,11 @@ if __name__ == '__main__':
     out2_button.when_pressed = out2Event
     
     while True:
-        FAULT.on()
-        time.sleep(0.1)
-        FAULT.off()
-        time.sleep(0.8)
-        
+        if FALLA:
+            FAULT.on()
+            time.sleep(0.1)
+            FAULT.off()
+            time.sleep(0.8)
+        else:
+            FAULT.on()
+            time.sleep(1)    

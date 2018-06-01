@@ -8,7 +8,7 @@ from firebase import firebase
 import sqlite3
 from datetime import datetime, timedelta
 
-from gpiozero import Button
+from gpiozero import Button, LED
 
 #///////////////////////////////////////////
 import firebase_admin
@@ -17,6 +17,8 @@ from firebase_admin import firestore
 #/////////////////////////////////////////////////
 
 ##### pin definitions
+
+FAULT = LED(5)
 
 IN1 = 13
 OUT1 = 6
@@ -80,9 +82,14 @@ def out2Event():
 
 def periodicDBInsert(key):
     #///////////////////
-    cred = credentials.Certificate(key)
-    firebase_admin.initialize_app(cred)
-    dbFs = firestore.client()
+    try:
+        print("conectando a la DB...")
+        cred = credentials.Certificate(key)
+        firebase_admin.initialize_app(cred)
+        dbFs = firestore.client()
+        FAULT.off()
+    except:
+        FAULT.on()
     # for sqlite
   
     while True:
@@ -95,21 +102,24 @@ def periodicDBInsert(key):
             #     pushToLocalDB(db, event)
             # creando doc
             events = queue_get_all(eventQueue)
-            doc_ref = dbFs.collection(u'marcados_eventos').document(unicode(datetime.now()))
-            doc_data = {
-                            'marcados':events,
-                            'id_evento': 1,
+            try:
+                doc_ref = dbFs.collection(u'marcados_eventos').document(unicode(datetime.now()))
+                doc_data = {
+                                'marcados':events,
+                                'id_evento': 1,
 
-            }   
-            doc_ref.set(doc_data)
-
+                }   
+                doc_ref.set(doc_data)
+                FAULT.off()
+            except:
+                FAULT.on()
             #c.executemany(insert_SQL, events2)
             #db.commit()
             #select_last_events(db)
             events = []
 
 
-        time.sleep(60)
+        time.sleep(90)
 
 
 if __name__ == '__main__':

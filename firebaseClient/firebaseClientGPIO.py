@@ -17,6 +17,8 @@ from firebase_admin import firestore
 #/////////////////////////////////////////////////
 
 missed_events = []
+
+DB_INTERVAL = 30
 ##### pin definitions
 
 FAULT = LED(5)
@@ -87,6 +89,7 @@ def periodicDBInsert(key):
     insert_SQL = '''INSERT INTO personEvent(tstamp, type) VALUES(?, ?)'''
     db = sqlite3.connect('/home/pi/projects/personCounter/firebaseClient/local.db')
     c = db.cursor()
+    global DB_INTERVAL
     global FALLA
     #///////////////////
     global missed_events
@@ -155,7 +158,7 @@ def periodicDBInsert(key):
             events = []
 
 
-        time.sleep(180)
+        time.sleep(DB_INTERVAL)
 
 
 if __name__ == '__main__':

@@ -125,7 +125,7 @@ def periodicDBInsert(key):
             events = []
 
 
-        time.sleep(90)
+        time.sleep(180)
 
 
 if __name__ == '__main__':

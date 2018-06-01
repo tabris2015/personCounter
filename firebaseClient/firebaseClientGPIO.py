@@ -115,6 +115,7 @@ def periodicDBInsert(key):
             # for event in events:
             #     pushToLocalDB(db, event)
             # creando doc
+            events = []
             if not eventQueue.empty():
                 print("eventos nuevos en cola: ", eventQueue.qsize())
                 events = queue_get_all(eventQueue)

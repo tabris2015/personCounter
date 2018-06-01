@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import threading
+import Queue
 import serial
 import time
 from datetime import datetime
@@ -17,9 +18,9 @@ from firebase_admin import firestore
 
 ##### pin definitions
 
-IN1 = 5
+IN1 = 13
 OUT1 = 6
-IN2 = 13
+IN2 = 26
 OUT2 = 19
 
 in1_button = Button(IN1, pull_up=False)
@@ -27,138 +28,55 @@ out1_button = Button(OUT1, pull_up=False)
 in2_button = Button(IN2, pull_up=False)
 out2_button = Button(OUT2, pull_up=False)
 
-events = []
-events2 = []
+eventQueue = Queue.Queue()
 ####
 connected = False
 
-def handle_data_s1(data):
-    #print(type(data), data)
-    #print("code: ", data[0])
+def queue_get_all(q):
+    items = []
+    maxItemsToRetreive = 10000
+    for numOfItemsRetrieved in range(0, maxItemsToRetreive):
+        try:
+            if numOfItemsRetrieved == maxItemsToRetreive:
+                break
+            items.append(q.get_nowait())
+        except:
+            break
+    return items
+
+
+def in1Event():
+    print("in1!")
     event_dic = {}
-    code = data[0]
-    global events
-    if code == 'I':
-        event_dic["tipo_marcado"] = 1
-        event_dic["fecha"] = datetime.utcnow()
-        event_dic["id_sensor"] = 1
-        events2.append((datetime.now(), 1))
-        print("in1")
-        events.append(event_dic)
-        #first_event = True
-    elif code == 'O':
-        event_dic["tipo_marcado"] = 0
-        event_dic["fecha"] = datetime.utcnow()
-        event_dic["id_sensor"] = 1
-        events2.append((datetime.now(), 0))
-        print("out1")
-        #first_event = True
-        events.append(event_dic)
-    else:
-        pass
-        #print("no code")
+    event_dic["tipo_marcado"] = 1
+    event_dic["fecha"] = datetime.utcnow()
+    event_dic["id_sensor"] = 1
+    eventQueue.put(event_dic)
 
-def handle_data_s2(data):
-    #print(type(data), data)
-    #print("code: ", data[0])
+def out1Event():
+    print("out1!")
     event_dic = {}
-    code = data[0]
-    global events
-    if code == 'I':
-        event_dic["tipo_marcado"] = 1
-        event_dic["fecha"] = datetime.utcnow()
-        event_dic["id_sensor"] = 2
-        events2.append((datetime.now(), 1))
-        print("in2")
-        events.append(event_dic)
-        #first_event = True
-    elif code == 'O':
-        event_dic["tipo_marcado"] = 0
-        event_dic["fecha"] = datetime.utcnow()
-        event_dic["id_sensor"] = 2
-        events2.append((datetime.now(), 0))
-        print("out2")
-        #first_event = True
-        events.append(event_dic)
-    else:
-        pass
-        #print("no code")
+    event_dic["tipo_marcado"] = 0
+    event_dic["fecha"] = datetime.utcnow()
+    event_dic["id_sensor"] = 1
+    eventQueue.put(event_dic)
 
+def in2Event():
+    print("in2!")
+    event_dic = {}
+    event_dic["tipo_marcado"] = 1
+    event_dic["fecha"] = datetime.utcnow()
+    event_dic["id_sensor"] = 2
+    eventQueue.put(event_dic)
 
+def out2Event():
+    print("out1!")
+    event_dic = {}
+    event_dic["tipo_marcado"] = 0
+    event_dic["fecha"] = datetime.utcnow()
+    event_dic["id_sensor"] = 2
+    eventQueue.put(event_dic)
 
-def read_from_port1(ser):
-    global connected
-    print("hilo serial 1")
-    while not connected:
-        connected = True
-
-        while True:
-            #print("test")
-            if ser.in_waiting:
-                reading = ser.readline()
-                ser.flush()
-                if reading:
-                    handle_data_s1(reading)
-
-                time.sleep(0.1)
-
-
-def read_from_port2(ser):
-    global connected
-    print("hilo serial 2")
-    while not connected:
-        connected = True
-
-        while True:
-            #print("test")
-            if ser.in_waiting:
-                reading = ser.readline()
-                ser.flush()
-                if reading:
-                    handle_data_s2(reading)
-
-                time.sleep(0.1)
-
-
-
-def pushToLocalDB(db, event):
-    insert_SQL = '''INSERT INTO personEvent(tstamp, type) VALUES(?, ?)'''
-    c = db.cursor()
-    c.execute(insert_SQL,(event['tstamp'], event['type']))
-    db.commit()
-
-
-
-def select_all_events(conn):
-    """
-    Query all rows in the events table
-    :param conn: the Connection object
-    :return:
-    """
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM personEvent")
- 
-    rows = cur.fetchall()
- 
-    for row in rows:
-        print(row)
-
-
-def select_last_events(conn):
-    """
-    Query all rows in the events table
-    :param conn: the Connection object
-    :return:
-    """
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM personEvent ORDER BY id DESC LIMIT 3")
- 
-    rows = cur.fetchall()
-    
-    print("last 3 events: ")
-    for row in rows:
-        print(row)
- 
 
 def periodicDBInsert(key):
     #///////////////////
@@ -166,21 +84,17 @@ def periodicDBInsert(key):
     firebase_admin.initialize_app(cred)
     dbFs = firestore.client()
     # for sqlite
-    
-    #insert_SQL = '''INSERT INTO personEvent(tstamp, type) VALUES(?, ?)'''
-    global events
-    global events2
-
-    #db = sqlite3.connect('local.db')
-    #c = db.cursor()
+  
     while True:
-        if not events:
+        
+        if eventQueue.empty():
             print("no hay eventos!")
         else:
             print("insertando eventos...")
             # for event in events:
             #     pushToLocalDB(db, event)
             # creando doc
+            events = queue_get_all(eventQueue)
             doc_ref = dbFs.collection(u'marcados_eventos').document(unicode(datetime.now()))
             doc_data = {
                             'marcados':events,
@@ -193,7 +107,7 @@ def periodicDBInsert(key):
             #db.commit()
             #select_last_events(db)
             events = []
-            events2 = []
+
 
         time.sleep(60)
 
@@ -201,39 +115,12 @@ def periodicDBInsert(key):
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description='contador de personas')
-    parser.add_argument('-serial1', required=True, action='store',help='for serial port1')
-    parser.add_argument('-serial2', required=True, action='store',help='for serial port2')
     parser.add_argument('-key', required=True, action='store',help='path to key for remote connection')
     
     args = parser.parse_args()
     keyPath = ""
     if args.key != None:
         keyPath = args.key
-
-    if args.serial1 != None and args.serial2 != None:
-        print("puerto serial!")
-        port1 = args.serial1
-        port2 = args.serial2
-        baud = 115200
-
-        serial_port1 = serial.Serial(port1, baud, timeout=0)
-        time.sleep(2)
-        print("serial1 conectado!")
-        serial_port2 = serial.Serial(port2, baud, timeout=0)
-        time.sleep(2)
-        print("serial2 conectado!")
-        
-        serialTh1 = threading.Thread(target=read_from_port1, args=(serial_port1,))
-        serialTh2 = threading.Thread(target=read_from_port2, args=(serial_port2,))
-        serialTh1.daemon = True
-        serialTh2.daemon = True
-        serialTh1.start()
-        time.sleep(1)
-        serialTh2.start()
-        time.sleep(1)
-    else:
-        port = "/dev/ttyUSB0"
-
 
     #first_event = False
 
@@ -245,14 +132,11 @@ if __name__ == '__main__':
     dbTh.start()
     ###
 
-    URL = ".."
-
-    SECRET = "...."
-    EMAIL = "000000"
-    EXTRA = "EEEEE"
-    #authentication = firebase.FirebaseAuthentication(SECRET, EMAIL, extra=EXTRA)
-
     #firebase = firebase.FirebaseApplication(URL, authentication=authentication)
-
+    in1_button.when_pressed = in1Event
+    out1_button.when_pressed = out1Event
+    in2_button.when_pressed = in2Event
+    out2_button.when_pressed = out2Event
+    
     while True:
         pass

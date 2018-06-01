@@ -113,9 +113,12 @@ def periodicDBInsert(key):
             #     pushToLocalDB(db, event)
             # creando doc
             if not eventQueue.empty():
+                print("eventos nuevos en cola: ", eventQueue.qsize)
                 events = queue_get_all(eventQueue)
+                eventQueue.task_done()
             
             try:
+                print("eventos perdidos en cola: ", len(missed_events))
                 total_events = events + missed_events
                 doc_ref = dbFs.collection(u'marcados_eventos').document(unicode(datetime.now()))
                 doc_data = {
@@ -134,9 +137,10 @@ def periodicDBInsert(key):
                             event['id_sensor']
                         )
                     )
-                c.executemany(insert_SQL, events)
+                c.executemany(insert_SQL, events_sqlite)
                 db.commit()
                 ######
+                events = []
                 missed_events = []
                 FAULT.off()
                 FALLA = False

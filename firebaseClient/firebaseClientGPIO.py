@@ -125,7 +125,7 @@ def periodicDBInsert(key):
                 print("eventos perdidos en cola: ", len(missed_events))
                 total_events = events + missed_events
                 print("accediendo a coleccion...")
-                doc_ref = dbFs.collection(u'marcados_eventos').document(unicode(datetime.now()))
+                
                 doc_data = {
                                 'marcados':total_events,
                                 'id_evento': 1,
@@ -147,6 +147,7 @@ def periodicDBInsert(key):
                 db.commit()
                 ######
                 print('ingresando datos a db remota...')
+                doc_ref = dbFs.collection(u'marcados_eventos').document(unicode(datetime.now()))
                 doc_ref.set(doc_data)
                 ##################
                 events = []
